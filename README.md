@@ -98,7 +98,7 @@ Common ALU operations included in this design are:
 // Module declaration
 module alu_enum #(parameter WIDTH = 4) (
     input  logic [WIDTH-1:0] A, B,
-    input  logic <define_operation_enum_here>, // Enumerated operation selector
+    input  logic  alu_ops_t operation // Enumerated operation selector
     output logic [WIDTH-1:0] ALU_Out,
     output logic CarryOut
 );
@@ -106,16 +106,16 @@ module alu_enum #(parameter WIDTH = 4) (
     // -----------------------------------------
     // Define Enumerated Data Type for ALU Ops
     // -----------------------------------------
-    // typedef enum logic [2:0] {
-    //     ADD = 3'b000,
-    //     SUB = 3'b001,
-    //     AND = 3'b010,
-    //     OR  = 3'b011,
-    //     XOR = 3'b100,
-    //     NOT = 3'b101,
-    //     SHL = 3'b110,
-    //     SHR = 3'b111
-    // } alu_ops_t;
+     typedef enum logic [2:0] {
+        ADD = 3'b000,
+        SUB = 3'b001,
+        AND = 3'b010,
+        OR  = 3'b011,
+        XOR = 3'b100,
+        NOT = 3'b101,
+        SHL = 3'b110,
+        SHR = 3'b111
+     } alu_ops_t;
 
     // -----------------------------------------
     // Internal signals
@@ -126,17 +126,22 @@ module alu_enum #(parameter WIDTH = 4) (
     // ALU operation using case statement
     // -----------------------------------------
     always_comb begin
-        // case (operation)
-        //     ADD: tmp = A + B;
-        //     SUB: tmp = A - B;
-        //     AND: tmp = A & B;
-        //     ...
-        //     default: tmp = 0;
-        // endcase
+         case (operation)
+            ADD: tmp = A + B;
+            SUB: tmp = A - B;
+            AND: tmp = A & B;
+            OR : tmp = A|B;
+            XOR: tmp = A^B;
+            NOT: tmp = ~A;
+            SHL: tmp = A<<B;
+            SHR: tmp = A>>B;
+            
+             default: tmp = 0;
+         endcase
     end
 
-    // assign ALU_Out = tmp[WIDTH-1:0];
-    // assign CarryOut = tmp[WIDTH];
+     assign ALU_Out = tmp[WIDTH-1:0];
+     assign CarryOut = tmp[WIDTH];
 
 endmodule
 ```
